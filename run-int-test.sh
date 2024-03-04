@@ -99,6 +99,8 @@ cd product-apim
 mvn versions:set -DnewVersion=4.3.0
 mvn clean install -Dmaven.test.skip=true
 
+wget https://raw.githubusercontent.com/wso2/testgrid/5c8de3cedc932e1753bb2c5e47e7d3af2ff19535/jobs/intg-test-resources/infra.json
+
 db_file=$(jq -r '.jdbc[] | select ( .name == '\"${DB_TYPE}\"') | .file_name' ${INFRA_JSON})
 wget -q https://integration-testgrid-resources.s3.amazonaws.com/lib/jdbc/${db_file}.jar  -P $TESTGRID_DIR/${PRODUCT_PACK_NAME}/repository/components/lib
 
