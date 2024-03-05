@@ -131,6 +131,9 @@ function log_info(){
     echo "[INFO][$(date '+%Y-%m-%d %H:%M:%S')]: $1"
 }
 
+echo "This is DB Engine"
+echo "$DB_ENGIN"
+
 if [[ $DB_ENGIN = "mysql" ]]; then
     log_info "Mysql DB is selected! Running mysql scripts for apim $WSO2_PRODUCT_VERSION"
     # create databases
