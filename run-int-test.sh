@@ -116,10 +116,10 @@ sed -i "s|DB_NAME|${DB_NAME}|g" ${INFRA_JSON}
 export_db_params ${DB_TYPE}
 
 
-DB_ENGIN='$CF_DB_NAME'
-DB_ENGINE_VERSION='$CF_DB_VERSION'
+DB_ENGIN="${CF_DB_NAME}"
+DB_ENGINE_VERSION="{$CF_DB_VERSION}"
 
-WSO2_PRODUCT_VERSION='$PRODUCT_VERSION'
+WSO2_PRODUCT_VERSION="{$PRODUCT_VERSION}"
 
 TESTGRID_DIR=/opt/testgrid/workspace
 # CloudFormation properties
@@ -130,9 +130,11 @@ DB_SCRIPT_PATH=/opt/testgrid/workspace/product-apim/modules/distribution/product
 function log_info(){
     echo "[INFO][$(date '+%Y-%m-%d %H:%M:%S')]: $1"
 }
+echo "This is CF_DB_NAME"
+echo "${CF_DB_NAME}"
 
-echo "This is DB Engine"
-echo "$DB_ENGIN"
+echo "This is DB_ENGIN"
+echo "${DB_ENGIN}"
 
 if [[ $DB_ENGIN = "mysql" ]]; then
     log_info "Mysql DB is selected! Running mysql scripts for apim $WSO2_PRODUCT_VERSION"
