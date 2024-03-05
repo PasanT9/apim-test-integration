@@ -147,7 +147,7 @@ if [[ $DB_ENGIN = "mysql" ]]; then
     log_info "[Mysql] Povisioning WSO2AM_APIMGT_DB"
     mysql -u &CF_DB_USERNAME -p&CF_DB_PASSWORD -h &CF_DB_HOST -P &CF_DB_PORT -D WSO2AM_APIMGT_DB -v <  $DB_SCRIPT_PATH/apimgt/mysql.sql
     log_info "End [Mysql] Povisioning WSO2AM_APIMGT_DB"
-    
+
     log_info "[Mysql] Povisioning WSO2AM_COMMON_DB"
     mysql -u &CF_DB_USERNAME -p&CF_DB_PASSWORD -h &CF_DB_HOST -P &CF_DB_PORT -D WSO2AM_COMMON_DB -v <  $DB_SCRIPT_PATH/mysql.sql
     log_info "End [Mysql] Povisioning WSO2AM_COMMON_DB"
@@ -216,10 +216,18 @@ elif [[ $DB_ENGIN =~ "sqlserver-se" ]]; then
     sqlcmd -S &CF_DB_HOST -U &CF_DB_USERNAME -P &CF_DB_PASSWORD -Q "ALTER DATABASE WSO2AM_COMMON_DB SET READ_COMMITTED_SNAPSHOT ON WITH ROLLBACK IMMEDIATE"
 
 fi
+
+sed -i "s|type = \".*\"|type = \"$DB_ENGIN\"|g" wso2am-4.3.0/repository/conf/deployment.toml
+sed -i "s|url = \".*\"|url = \"$API_MANAGER_DATABASE_URL\"|g" wso2am-4.3.0/repository/conf/deployment.toml
+sed -i "s/username = \".*\"/username = \"$API_MANAGER_DATABASE_USERNAME\"/g" wso2am-4.3.0/repository/conf/deployment.toml
+sed -i "s/password = \".*\"/password = \"$API_MANAGER_DATABASE_PASSWORD\"/g" wso2am-4.3.0/repository/conf/deployment.toml
+sed -i "s/driver = \".*\"/driver = \"$API_MANAGER_DATABASE_DRIVER\"/g" wso2am-4.3.0/repository/conf/deployment.toml
+awk -v driver="$API_MANAGER_DATABASE_DRIVER" '/^\[database.apim_db\]/ { print; print "driver = \"" driver "\""; next }1' wso2am-4.3.0/repository/conf/deployment.toml > tmp.toml && mv tmp.toml wso2am-4.3.0/repository/conf/deployment.toml
+awk -v driver="$API_MANAGER_DATABASE_DRIVER" '/^\[database.shared_db\]/ { print; print "driver = \"" driver "\""; next }1' wso2am-4.3.0/repository/conf/deployment.toml > tmp.toml && mv tmp.toml wso2am-4.3.0/repository/conf/deployment.toml
+
 echo "Print deployment.toml"
 cat wso2am-4.3.0/repository/conf/deployment.toml
 echo "End Print deployment.toml"
-
 
 zip -r wso2am-4.3.0.zip wso2am-4.3.0
 
