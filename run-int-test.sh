@@ -145,9 +145,12 @@ if [[ $DB_ENGIN = "mysql" ]]; then
     mysql -u &CF_DB_USERNAME -p&CF_DB_PASSWORD -h &CF_DB_HOST -P &CF_DB_PORT -e "CREATE DATABASE WSO2AM_STAT_DB"
 
     log_info "[Mysql] Povisioning WSO2AM_APIMGT_DB"
-    mysql -u &CF_DB_USERNAME -p&CF_DB_PASSWORD -h &CF_DB_HOST -P &CF_DB_PORT -D WSO2AM_APIMGT_DB <  $DB_SCRIPT_PATH/apimgt/mysql.sql
+    mysql -u &CF_DB_USERNAME -p&CF_DB_PASSWORD -h &CF_DB_HOST -P &CF_DB_PORT -D WSO2AM_APIMGT_DB -v <  $DB_SCRIPT_PATH/apimgt/mysql.sql
+    log_info "End [Mysql] Povisioning WSO2AM_APIMGT_DB"
+    
     log_info "[Mysql] Povisioning WSO2AM_COMMON_DB"
-    mysql -u &CF_DB_USERNAME -p&CF_DB_PASSWORD -h &CF_DB_HOST -P &CF_DB_PORT -D WSO2AM_COMMON_DB <  $DB_SCRIPT_PATH/mysql.sql
+    mysql -u &CF_DB_USERNAME -p&CF_DB_PASSWORD -h &CF_DB_HOST -P &CF_DB_PORT -D WSO2AM_COMMON_DB -v <  $DB_SCRIPT_PATH/mysql.sql
+    log_info "End [Mysql] Povisioning WSO2AM_COMMON_DB"
 
 elif [[ $DB_ENGIN = "postgres" ]]; then  
 
@@ -213,11 +216,16 @@ elif [[ $DB_ENGIN =~ "sqlserver-se" ]]; then
     sqlcmd -S &CF_DB_HOST -U &CF_DB_USERNAME -P &CF_DB_PASSWORD -Q "ALTER DATABASE WSO2AM_COMMON_DB SET READ_COMMITTED_SNAPSHOT ON WITH ROLLBACK IMMEDIATE"
 
 fi
+echo "Print deployment.toml"
+cat wso2am-4.3.0/repository/conf/deployment.toml
+echo "End Print deployment.toml"
+
 
 zip -r wso2am-4.3.0.zip wso2am-4.3.0
 
 rm -rf wso2am-4.3.0
 cd ../../../../
+pwd
 
 # delete if the folder is available
 # rm -rf $$PRODUCT_REPOSITORY_PACK_DIR
@@ -229,6 +237,8 @@ cd ../../../../
 # mv modules/distribution/product/target/$PRODUCT_PACK_NAME.zip $PRODUCT_REPOSITORY_PACK_DIR/.
 # mv $TESTGRID_DIR/$PRODUCT_PACK_NAME.zip $PRODUCT_REPOSITORY_PACK_DIR/.
 
-log_info "install pack into local maven Repository"
-mvn install:install-file -Dfile=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0.zip -DgroupId=org.wso2.am -DartifactId=wso2am -Dversion=4.3.0 -Dpackaging=zip
-cd $INT_TEST_MODULE_DIR  && mvn clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
+
+# Testing..............................................
+# log_info "install pack into local maven Repository"
+# mvn install:install-file -Dfile=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0.zip -DgroupId=org.wso2.am -DartifactId=wso2am -Dversion=4.3.0 -Dpackaging=zip
+# cd $INT_TEST_MODULE_DIR  && mvn clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
