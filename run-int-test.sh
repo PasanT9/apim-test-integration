@@ -130,13 +130,13 @@ DB_SCRIPT_PATH=/opt/testgrid/workspace/product-apim/modules/distribution/product
 function log_info(){
     echo "[INFO][$(date '+%Y-%m-%d %H:%M:%S')]: $1"
 }
-echo "This is CF_DB_NAME"
-echo "${CF_DB_NAME}"
+echo "This is DB_TYPE"
+echo "${DB_TYPE}"
 
 echo "This is DB_ENGIN"
 echo "${DB_ENGIN}"
 
-if [[ $DB_ENGIN = "mysql" ]]; then
+if [[ $DB_TYPE = "mysql" ]]; then
     log_info "Mysql DB is selected! Running mysql scripts for apim $WSO2_PRODUCT_VERSION"
     # create databases
     log_info "[Mysql] Droping Databases if exist"
@@ -145,9 +145,9 @@ if [[ $DB_ENGIN = "mysql" ]]; then
     mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -e "DROP DATABASE IF EXISTS WSO2AM_STAT_DB"
 
     log_info "[Mysql] Creating Databases"
-    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -e "CREATE DATABASE WSO2AM_COMMON_DB"
-    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -e "CREATE DATABASE WSO2AM_APIMGT_DB"
-    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -e "CREATE DATABASE WSO2AM_STAT_DB"
+    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -e "CREATE DATABASE WSO2AM_COMMON_DB CHARACTER SET latin1"
+    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -e "CREATE DATABASE WSO2AM_APIMGT_DB CHARACTER SET latin1"
+    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -e "CREATE DATABASE WSO2AM_STAT_DB CHARACTER SET latin1"
 
     log_info "[Mysql] Povisioning WSO2AM_APIMGT_DB"
     mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -D WSO2AM_APIMGT_DB -v <  $DB_SCRIPT_PATH/apimgt/mysql.sql
@@ -157,7 +157,7 @@ if [[ $DB_ENGIN = "mysql" ]]; then
     mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -D WSO2AM_COMMON_DB -v <  $DB_SCRIPT_PATH/mysql.sql
     log_info "End [Mysql] Povisioning WSO2AM_COMMON_DB"
 
-elif [[ $DB_ENGIN = "postgres" ]]; then  
+elif [[ $DB_TYPE = "postgres" ]]; then  
 
     log_info "Postgresql DB is selected! Running Postgresql scripts for apim $WSO2_PRODUCT_VERSION"
     export PGPASSWORD="$CF_DB_PASSWORD"
@@ -177,7 +177,7 @@ elif [[ $DB_ENGIN = "postgres" ]]; then
     log_info "[Postgres] Provisioning database WSO2AM_COMMON_DB"
     psql -U $CF_DB_USERNAME -h $CF_DB_HOST -p $CF_DB_PORT -d WSO2AM_COMMON_DB -f $DB_SCRIPT_PATH/postgresql.sql
 
-elif [[ $DB_ENGIN =~ "oracle-se" ]]; then
+elif [[ $DB_TYPE =~ "oracle-se" ]]; then
 	
     export ORACLE_HOME=/usr/lib/oracle/12.2/client64/
     export PATH=$PATH:/usr/lib/oracle/12.2/client64/bin/
@@ -199,7 +199,7 @@ elif [[ $DB_ENGIN =~ "oracle-se" ]]; then
     echo exit | sqlplus64 'WSO2AM_COMMON_DB/$CF_DB_PASSWORD@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=$CF_DB_HOST)(Port=$CF_DB_PORT))(CONNECT_DATA=(SID=WSO2AMDB)))' @$DB_SCRIPT_PATH/oracle.sql
     echo exit | sqlplus64 'WSO2AM_APIMGT_DB/$CF_DB_PASSWORD@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=$CF_DB_HOST)(Port=$CF_DB_PORT))(CONNECT_DATA=(SID=WSO2AMDB)))' @$DB_SCRIPT_PATH/apimgt/oracle.sql
 
-elif [[ $DB_ENGIN =~ "sqlserver-se" ]]; then
+elif [[ $DB_TYPE =~ "sqlserver-se" ]]; then
     log_info "SQL Server DB Engine is selected! Running MSSql scripts for apim $WSO2_PRODUCT_VERSION"
 
     log_info "[SQLServer] Droping Databases if exist"
@@ -251,6 +251,6 @@ pwd
 
 
 # Testing..............................................
-# log_info "install pack into local maven Repository"
-# mvn install:install-file -Dfile=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0.zip -DgroupId=org.wso2.am -DartifactId=wso2am -Dversion=4.3.0 -Dpackaging=zip
-# cd $INT_TEST_MODULE_DIR  && mvn clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
+log_info "install pack into local maven Repository"
+mvn install:install-file -Dfile=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0.zip -DgroupId=org.wso2.am -DartifactId=wso2am -Dversion=4.3.0 -Dpackaging=zip
+cd $INT_TEST_MODULE_DIR  && mvn clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
