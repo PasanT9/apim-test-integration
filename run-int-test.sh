@@ -53,7 +53,8 @@ function log_error(){
     exit 1
 }
 
-function install_jdk(){
+function install_jdk21(){
+    echo "Installing JDK 21"
     jdk_name=jdk-21.0.2_13
     jdk_file=OpenJDK21U-jdk_x64_linux_hotspot_21.0.2_13
 
@@ -65,6 +66,19 @@ function install_jdk(){
     export PATH=$JAVA_HOME/bin:$PATH
     echo "This is the Java version"
     java --version
+}
+
+function install_jdk(){
+    jdk_name=$1
+    echo "Installing JDK ${jdk_name}"
+
+    mkdir -p /opt/${jdk_name}
+    jdk_file=$(jq -r '.jdk[] | select ( .name == '\"${jdk_name}\"') | .file_name' ${INFRA_JSON})
+    wget -q https://integration-testgrid-resources.s3.amazonaws.com/lib/jdk/$jdk_file.tar.gz
+    tar -xzf "$jdk_file.tar.gz" -C /opt/${jdk_name} --strip-component=1
+
+    export JAVA_HOME=/opt/${jdk_name}
+    echo $JAVA_HOME
 }
 
 function export_db_params(){
@@ -230,4 +244,5 @@ pwd
 # Testing..............................................
 log_info "install pack into local maven Repository"
 mvn install:install-file -Dfile=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0.zip -DgroupId=org.wso2.am -DartifactId=wso2am -Dversion=4.3.0 -Dpackaging=zip
+install_jdk21
 cd $INT_TEST_MODULE_DIR  && mvn clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
