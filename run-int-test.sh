@@ -219,28 +219,10 @@ elif [[ $DB_TYPE =~ "sqlserver-se" ]]; then
 
 fi
 
-# sed -i "s|type = \".*\"|type = \"$DB_ENGIN\"|g" wso2am-4.3.0/repository/conf/deployment.toml
-# sed -i "s|url = \".*\"|url = \"$API_MANAGER_DATABASE_URL\"|g" wso2am-4.3.0/repository/conf/deployment.toml
-# sed -i "s/username = \".*\"/username = \"$API_MANAGER_DATABASE_USERNAME\"/g" wso2am-4.3.0/repository/conf/deployment.toml
-# sed -i "s/password = \".*\"/password = \"$API_MANAGER_DATABASE_PASSWORD\"/g" wso2am-4.3.0/repository/conf/deployment.toml
-# awk -v driver="$API_MANAGER_DATABASE_DRIVER" '/^\[database.apim_db\]/ { print; print "driver = \"" driver "\""; next }1' wso2am-4.3.0/repository/conf/deployment.toml > tmp.toml && mv tmp.toml wso2am-4.3.0/repository/conf/deployment.toml
-# awk -v driver="$API_MANAGER_DATABASE_DRIVER" '/^\[database.shared_db\]/ { print; print "driver = \"" driver "\""; next }1' wso2am-4.3.0/repository/conf/deployment.toml > tmp.toml && mv tmp.toml wso2am-4.3.0/repository/conf/deployment.toml
-
-
 zip -r wso2am-4.3.0.zip wso2am-4.3.0
 rm -rf wso2am-4.3.0
 cd ../../../../
 pwd
-
-# delete if the folder is available
-# rm -rf $$PRODUCT_REPOSITORY_PACK_DIR
-# mkdir -p $PRODUCT_REPOSITORY_PACK_DIR
-
-# log_info "Copying product pack to Repository"
-# [ -f $TESTGRID_DIR/$PRODUCT_NAME-$PRODUCT_VERSION*.zip ] && rm -f $TESTGRID_DIR/$PRODUCT_NAME-$PRODUCT_VERSION*.zip
-# cd $TESTGRID_DIR && zip -qr $PRODUCT_PACK_NAME.zip $PRODUCT_PACK_NAME
-# mv modules/distribution/product/target/$PRODUCT_PACK_NAME.zip $PRODUCT_REPOSITORY_PACK_DIR/.
-# mv $TESTGRID_DIR/$PRODUCT_PACK_NAME.zip $PRODUCT_REPOSITORY_PACK_DIR/.
 
 
 # Testing..............................................
