@@ -230,4 +230,5 @@ log_info "install pack into local maven Repository"
 mvn install:install-file -Dfile=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0-SNAPSHOT.zip -DgroupId=org.wso2.am -DartifactId=wso2am -Dversion=4.3.0-SNAPSHOT -Dpackaging=zip
 cd $INT_TEST_MODULE_DIR
 rm -rf tests-integration/tests-backend/src/test/resources/testng.xml
+curl -o tests-integration/tests-backend/src/test/resources/testng.xml https://raw.githubusercontent.com/PasanT9/apim-test-integration/4.3.0/testng.xml
 mvn clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
