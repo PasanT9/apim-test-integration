@@ -96,17 +96,17 @@ fi
 # Build product apim
 git clone https://github.com/wso2/product-apim --branch master --single-branch
 cd product-apim
-mvn versions:set -DnewVersion=4.3.0
+#mvn versions:set -DnewVersion=4.3.0
 mvn clean install -Dmaven.test.skip=true
 
 cd modules/distribution/product/target/
-unzip wso2am-4.3.0.zip
-rm -rf wso2am-4.3.0.zip
+unzip wso2am-4.3.0-SNAPSHOT.zip
+rm -rf wso2am-4.3.0-SNAPSHOT.zip
 
 wget https://raw.githubusercontent.com/wso2/testgrid/5c8de3cedc932e1753bb2c5e47e7d3af2ff19535/jobs/intg-test-resources/infra.json
 
 db_file=$(jq -r '.jdbc[] | select ( .name == '\"${DB_TYPE}\"') | .file_name' ${INFRA_JSON})
-wget -q https://integration-testgrid-resources.s3.amazonaws.com/lib/jdbc/${db_file}.jar  -P /opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0/repository/components/lib/
+wget -q https://integration-testgrid-resources.s3.amazonaws.com/lib/jdbc/${db_file}.jar  -P /opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0-SNAPSHOT/repository/components/lib/
 
 sed -i "s|DB_HOST|${CF_DB_HOST}|g" ${INFRA_JSON}
 sed -i "s|DB_USERNAME|${CF_DB_USERNAME}|g" ${INFRA_JSON}
@@ -125,7 +125,7 @@ TESTGRID_DIR=/opt/testgrid/workspace
 # CloudFormation properties
 
 
-DB_SCRIPT_PATH=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0/dbscripts
+DB_SCRIPT_PATH=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0-SNAPSHOT/dbscripts
 
 function log_info(){
     echo "[INFO][$(date '+%Y-%m-%d %H:%M:%S')]: $1"
@@ -219,13 +219,13 @@ elif [[ $DB_TYPE =~ "sqlserver-se" ]]; then
 
 fi
 
-zip -r wso2am-4.3.0.zip wso2am-4.3.0
-rm -rf wso2am-4.3.0
+zip -r wso2am-4.3.0-SNAPSHOT.zip wso2am-4.3.0-SNAPSHOT
+rm -rf wso2am-4.3.0-SNAPSHOT
 cd ../../../../
 pwd
 
 
 # Testing..............................................
 log_info "install pack into local maven Repository"
-mvn install:install-file -Dfile=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0.zip -DgroupId=org.wso2.am -DartifactId=wso2am -Dversion=4.3.0 -Dpackaging=zip
+mvn install:install-file -Dfile=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0-SNAPSHOT.zip -DgroupId=org.wso2.am -DartifactId=wso2am -Dversion=4.3.0-SNAPSHOT -Dpackaging=zip
 cd $INT_TEST_MODULE_DIR  && mvn clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
