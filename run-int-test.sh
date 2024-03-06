@@ -133,9 +133,6 @@ function log_info(){
 echo "This is DB_TYPE"
 echo "${DB_TYPE}"
 
-echo "This is DB_ENGIN"
-echo "${DB_ENGIN}"
-
 if [[ $DB_TYPE = "mysql" ]]; then
     log_info "Mysql DB is selected! Running mysql scripts for apim $WSO2_PRODUCT_VERSION"
     # create databases
@@ -150,11 +147,11 @@ if [[ $DB_TYPE = "mysql" ]]; then
     mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -e "CREATE DATABASE WSO2AM_STAT_DB CHARACTER SET latin1"
 
     log_info "[Mysql] Povisioning WSO2AM_APIMGT_DB"
-    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -D WSO2AM_APIMGT_DB -v <  $DB_SCRIPT_PATH/apimgt/mysql.sql
+    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -D WSO2AM_APIMGT_DB <  $DB_SCRIPT_PATH/apimgt/mysql.sql
     log_info "End [Mysql] Povisioning WSO2AM_APIMGT_DB"
 
     log_info "[Mysql] Povisioning WSO2AM_COMMON_DB"
-    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -D WSO2AM_COMMON_DB -v <  $DB_SCRIPT_PATH/mysql.sql
+    mysql -u $CF_DB_USERNAME -p$CF_DB_PASSWORD -h $CF_DB_HOST -P $CF_DB_PORT -D WSO2AM_COMMON_DB <  $DB_SCRIPT_PATH/mysql.sql
     log_info "End [Mysql] Povisioning WSO2AM_COMMON_DB"
 
 elif [[ $DB_TYPE = "postgres" ]]; then  
@@ -229,12 +226,8 @@ fi
 # awk -v driver="$API_MANAGER_DATABASE_DRIVER" '/^\[database.apim_db\]/ { print; print "driver = \"" driver "\""; next }1' wso2am-4.3.0/repository/conf/deployment.toml > tmp.toml && mv tmp.toml wso2am-4.3.0/repository/conf/deployment.toml
 # awk -v driver="$API_MANAGER_DATABASE_DRIVER" '/^\[database.shared_db\]/ { print; print "driver = \"" driver "\""; next }1' wso2am-4.3.0/repository/conf/deployment.toml > tmp.toml && mv tmp.toml wso2am-4.3.0/repository/conf/deployment.toml
 
-echo "Print deployment.toml"
-cat wso2am-4.3.0/repository/conf/deployment.toml
-echo "End Print deployment.toml"
 
 zip -r wso2am-4.3.0.zip wso2am-4.3.0
-
 rm -rf wso2am-4.3.0
 cd ../../../../
 pwd
