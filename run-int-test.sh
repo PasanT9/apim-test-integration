@@ -178,10 +178,10 @@ elif [[ $DB_TYPE = "postgres" ]]; then
 elif [[ $DB_TYPE =~ "oracle-se" ]]; then
 
     echo "printing shared_db"
-    cat /opt/testgrid/workspace/wso2am-4.2.0/dbscripts/oracle.sql
+    cat /opt/testgrid/workspace/dbscripts/oracle.sql
 
     echo "printing apimgt_db"
-    cat /opt/testgrid/workspace/wso2am-4.2.0/dbscripts/apimgt/oracle.sql
+    cat /opt/testgrid/workspace/dbscripts/apimgt/oracle.sql
 
     # export ORACLE_HOME=/usr/lib/oracle/12.2/client64/
     # export PATH=$PATH:/usr/lib/oracle/12.2/client64/bin/
