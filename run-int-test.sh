@@ -176,26 +176,32 @@ elif [[ $DB_TYPE = "postgres" ]]; then
     psql -U &CF_DB_USERNAME -h &CF_DB_HOST -p &CF_DB_PORT -d WSO2AM_COMMON_DB -f $DB_SCRIPT_PATH/postgresql.sql
 
 elif [[ $DB_TYPE =~ "oracle-se" ]]; then
-	
-    export ORACLE_HOME=/usr/lib/oracle/12.2/client64/
-    export PATH=$PATH:/usr/lib/oracle/12.2/client64/bin/
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib:$ORACLE_HOME
 
-    log_info "Oracle DB is selected! Running Oracle scripts for apim $WSO2_PRODUCT_VERSION"
+    echo "printing shared_db"
+    cat /opt/testgrid/workspace/wso2am-4.2.0/dbscripts/oracle.sql
+
+    echo "printing apimgt_db"
+    cat /opt/testgrid/workspace/wso2am-4.2.0/dbscripts/apimgt/oracle.sql
+
+    # export ORACLE_HOME=/usr/lib/oracle/12.2/client64/
+    # export PATH=$PATH:/usr/lib/oracle/12.2/client64/bin/
+    # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib:$ORACLE_HOME
+
+    # log_info "Oracle DB is selected! Running Oracle scripts for apim $WSO2_PRODUCT_VERSION"
     # Create users to the required DB
-    echo "DECLARE USER_EXIST INTEGER;"$'\n'"BEGIN SELECT COUNT(*) INTO USER_EXIST FROM dba_users WHERE username='WSO2AM_APIMGT_DB';"$'\n'"IF (USER_EXIST > 0) THEN EXECUTE IMMEDIATE 'DROP USER WSO2AM_APIMGT_DB CASCADE';"$'\n'"END IF;"$'\n'"END;"$'\n'"/" > apim_oracle_user.sql
-    echo "DECLARE USER_EXIST INTEGER;"$'\n'"BEGIN SELECT COUNT(*) INTO USER_EXIST FROM dba_users WHERE username='WSO2AM_COMMON_DB';"$'\n'"IF (USER_EXIST > 0) THEN EXECUTE IMMEDIATE 'DROP USER WSO2AM_COMMON_DB CASCADE';"$'\n'"END IF;"$'\n'"END;"$'\n'"/" >> apim_oracle_user.sql
-    echo "DECLARE USER_EXIST INTEGER;"$'\n'"BEGIN SELECT COUNT(*) INTO USER_EXIST FROM dba_users WHERE username='WSO2AM_STAT_DB';"$'\n'"IF (USER_EXIST > 0) THEN EXECUTE IMMEDIATE 'DROP USER WSO2AM_STAT_DB CASCADE';"$'\n'"END IF;"$'\n'"END;"$'\n'"/" >> apim_oracle_user.sql
-    echo "CREATE USER WSO2AM_COMMON_DB IDENTIFIED BY &CF_DB_PASSWORD;"$'\n'"GRANT CONNECT, RESOURCE, DBA TO WSO2AM_COMMON_DB;"$'\n'"GRANT UNLIMITED TABLESPACE TO WSO2AM_COMMON_DB;" >> apim_oracle_user.sql
-    echo "CREATE USER WSO2AM_APIMGT_DB IDENTIFIED BY &CF_DB_PASSWORD;"$'\n'"GRANT CONNECT, RESOURCE, DBA TO WSO2AM_APIMGT_DB;"$'\n'"GRANT UNLIMITED TABLESPACE TO WSO2AM_APIMGT_DB;" >> apim_oracle_user.sql
-    echo "CREATE USER WSO2AM_STAT_DB IDENTIFIED BY &CF_DB_PASSWORD;"$'\n'"GRANT CONNECT, RESOURCE, DBA TO WSO2AM_STAT_DB;"$'\n'"GRANT UNLIMITED TABLESPACE TO WSO2AM_STAT_DB;" >> apim_oracle_user.sql
-    echo "ALTER SYSTEM SET open_cursors = 3000 SCOPE=BOTH;">> apim_oracle_user.sql
-    # Create the tables
-    log_info "[Oracle] Creating Users"
-    echo exit | sqlplus64 '&CF_DB_USERNAME/&CF_DB_PASSWORD@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=&CF_DB_HOST)(Port=&CF_DB_PORT))(CONNECT_DATA=(SID=WSO2AMDB)))' @apim_oracle_user.sql
-    log_info "[Oracle] Creating Tables"
-    echo exit | sqlplus64 'WSO2AM_COMMON_DB/&CF_DB_PASSWORD@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=&CF_DB_HOST)(Port=&CF_DB_PORT))(CONNECT_DATA=(SID=WSO2AMDB)))' @$DB_SCRIPT_PATH/oracle.sql
-    echo exit | sqlplus64 'WSO2AM_APIMGT_DB/&CF_DB_PASSWORD@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=&CF_DB_HOST)(Port=&CF_DB_PORT))(CONNECT_DATA=(SID=WSO2AMDB)))' @$DB_SCRIPT_PATH/apimgt/oracle.sql
+    # echo "DECLARE USER_EXIST INTEGER;"$'\n'"BEGIN SELECT COUNT(*) INTO USER_EXIST FROM dba_users WHERE username='WSO2AM_APIMGT_DB';"$'\n'"IF (USER_EXIST > 0) THEN EXECUTE IMMEDIATE 'DROP USER WSO2AM_APIMGT_DB CASCADE';"$'\n'"END IF;"$'\n'"END;"$'\n'"/" > apim_oracle_user.sql
+    #echo "DECLARE USER_EXIST INTEGER;"$'\n'"BEGIN SELECT COUNT(*) INTO USER_EXIST FROM dba_users WHERE username='WSO2AM_COMMON_DB';"$'\n'"IF (USER_EXIST > 0) THEN EXECUTE IMMEDIATE 'DROP USER WSO2AM_COMMON_DB CASCADE';"$'\n'"END IF;"$'\n'"END;"$'\n'"/" >> apim_oracle_user.sql
+    # echo "DECLARE USER_EXIST INTEGER;"$'\n'"BEGIN SELECT COUNT(*) INTO USER_EXIST FROM dba_users WHERE username='WSO2AM_STAT_DB';"$'\n'"IF (USER_EXIST > 0) THEN EXECUTE IMMEDIATE 'DROP USER WSO2AM_STAT_DB CASCADE';"$'\n'"END IF;"$'\n'"END;"$'\n'"/" >> apim_oracle_user.sql
+    # echo "CREATE USER WSO2AM_COMMON_DB IDENTIFIED BY &CF_DB_PASSWORD;"$'\n'"GRANT CONNECT, RESOURCE, DBA TO WSO2AM_COMMON_DB;"$'\n'"GRANT UNLIMITED TABLESPACE TO WSO2AM_COMMON_DB;" >> apim_oracle_user.sql
+    # echo "CREATE USER WSO2AM_APIMGT_DB IDENTIFIED BY &CF_DB_PASSWORD;"$'\n'"GRANT CONNECT, RESOURCE, DBA TO WSO2AM_APIMGT_DB;"$'\n'"GRANT UNLIMITED TABLESPACE TO WSO2AM_APIMGT_DB;" >> apim_oracle_user.sql
+    # echo "CREATE USER WSO2AM_STAT_DB IDENTIFIED BY &CF_DB_PASSWORD;"$'\n'"GRANT CONNECT, RESOURCE, DBA TO WSO2AM_STAT_DB;"$'\n'"GRANT UNLIMITED TABLESPACE TO WSO2AM_STAT_DB;" >> apim_oracle_user.sql
+    # echo "ALTER SYSTEM SET open_cursors = 3000 SCOPE=BOTH;">> apim_oracle_user.sql
+    # # Create the tables
+    # log_info "[Oracle] Creating Users"
+    # echo exit | sqlplus64 '&CF_DB_USERNAME/&CF_DB_PASSWORD@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=&CF_DB_HOST)(Port=&CF_DB_PORT))(CONNECT_DATA=(SID=WSO2AMDB)))' @apim_oracle_user.sql
+    # log_info "[Oracle] Creating Tables"
+    # echo exit | sqlplus64 'WSO2AM_COMMON_DB/&CF_DB_PASSWORD@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=&CF_DB_HOST)(Port=&CF_DB_PORT))(CONNECT_DATA=(SID=WSO2AMDB)))' @$DB_SCRIPT_PATH/oracle.sql
+    # echo exit | sqlplus64 'WSO2AM_APIMGT_DB/&CF_DB_PASSWORD@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=&CF_DB_HOST)(Port=&CF_DB_PORT))(CONNECT_DATA=(SID=WSO2AMDB)))' @$DB_SCRIPT_PATH/apimgt/oracle.sql
 
 elif [[ $DB_TYPE =~ "sqlserver-se" ]]; then
     log_info "SQL Server DB Engine is selected! Running MSSql scripts for apim $WSO2_PRODUCT_VERSION"
