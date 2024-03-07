@@ -72,15 +72,15 @@ function export_db_params(){
     db_name=$1
 
     export SHARED_DATABASE_DRIVER=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .driver' ${INFRA_JSON})
-    export SHARED_DATABASE_URL=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_SHARED_DB") | .url' ${INFRA_JSON})
-    export SHARED_DATABASE_USERNAME=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_SHARED_DB") | .username' ${INFRA_JSON})
-    export SHARED_DATABASE_PASSWORD=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_SHARED_DB") | .password' ${INFRA_JSON})
+    export SHARED_DATABASE_URL=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_COMMON_DB") | .url' ${INFRA_JSON})
+    export SHARED_DATABASE_USERNAME=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_COMMON_DB") | .username' ${INFRA_JSON})
+    export SHARED_DATABASE_PASSWORD=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_COMMON_DB") | .password' ${INFRA_JSON})
     export SHARED_DATABASE_VALIDATION_QUERY=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .validation_query' ${INFRA_JSON})
     
     export API_MANAGER_DATABASE_DRIVER=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .driver' ${INFRA_JSON})
-    export API_MANAGER_DATABASE_URL=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_APIM_DB") | .url' ${INFRA_JSON})
-    export API_MANAGER_DATABASE_USERNAME=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_APIM_DB") | .username' ${INFRA_JSON})
-    export API_MANAGER_DATABASE_PASSWORD=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_APIM_DB") | .password' ${INFRA_JSON})
+    export API_MANAGER_DATABASE_URL=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_APIMGT_DB") | .url' ${INFRA_JSON})
+    export API_MANAGER_DATABASE_USERNAME=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_APIMGT_DB") | .username' ${INFRA_JSON})
+    export API_MANAGER_DATABASE_PASSWORD=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .database[] | select ( .name == "WSO2AM_APIMGT_DB") | .password' ${INFRA_JSON})
     export API_MANAGER_DATABASE_VALIDATION_QUERY=$(jq -r '.jdbc[] | select ( .name == '\"${db_name}\"' ) | .validation_query' ${INFRA_JSON})
 }
 
@@ -107,7 +107,7 @@ unzip wso2am-4.3.0-SNAPSHOT.zip
 rm -rf wso2am-4.3.0-SNAPSHOT.zip
 
 
-wget https://raw.githubusercontent.com/PasanT9/apim-test-integration/4.3.0-copy/infra.json
+wget https://raw.githubusercontent.com/wso2/testgrid/5c8de3cedc932e1753bb2c5e47e7d3af2ff19535/jobs/intg-test-resources/infra.json
 
 db_file=$(jq -r '.jdbc[] | select ( .name == '\"${DB_TYPE}\"') | .file_name' ${INFRA_JSON})
 wget -q https://integration-testgrid-resources.s3.amazonaws.com/lib/jdbc/${db_file}.jar  -P /opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0-SNAPSHOT/repository/components/lib/
