@@ -234,4 +234,4 @@ mvn -pl '!modules/integration/tests-integration/tests-benchmark' install:install
 cd $INT_TEST_MODULE_DIR
 rm -rf tests-integration/tests-backend/src/test/resources/testng.xml
 curl -o tests-integration/tests-backend/src/test/resources/testng.xml https://raw.githubusercontent.com/PasanT9/apim-test-integration/4.3.0/testng.xml
-mvn -pl '!modules/integration/tests-integration/tests-benchmark' clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
+mvn -pl '!tests-integration/tests-benchmark' clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
