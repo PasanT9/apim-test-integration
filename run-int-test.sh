@@ -113,7 +113,7 @@ fi
 git clone https://github.com/wso2/product-apim --branch master --single-branch
 cd product-apim
 #mvn versions:set -DnewVersion=4.3.0
-mvn clean install -Dmaven.test.skip=true
+mvn clean install -fae -Dmaven.test.skip=true -DskipBenchMarkTest=true -DskipRestartTests=true
 
 cd modules/distribution/product/target/
 unzip wso2am-4.3.0-SNAPSHOT.zip
