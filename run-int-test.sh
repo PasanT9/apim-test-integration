@@ -111,10 +111,11 @@ fi
 
 # Build product apim
 git clone https://github.com/wso2/product-apim --branch master --single-branch
+cd product-apim
+#mvn versions:set -DnewVersion=4.3.0
+mvn  -pl '!modules/integration/tests-integration' clean install -fae -Dmaven.test.skip=true -DskipBenchMarkTest=true -DskipRestartTests=true
 
-cd product-apim/modules/distribution/product/target/
-wget -O wso2am-4.3.0-SNAPSHOT.zip https://github.com/wso2/product-apim/releases/download/v4.3.0-alpha/wso2am-4.3.0-alpha.zip
-
+cd modules/distribution/product/target/
 unzip wso2am-4.3.0-SNAPSHOT.zip
 rm -rf wso2am-4.3.0-SNAPSHOT.zip
 
