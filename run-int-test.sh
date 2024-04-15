@@ -53,10 +53,10 @@ function log_error(){
     exit 1
 }
 
-function install_jdk21(){
-    echo "Installing JDK 21"
-    jdk_name=jdk-21.0.2_13
-    jdk_file=OpenJDK21U-jdk_x64_linux_hotspot_21.0.2_13
+function install_jdk17(){
+    echo "Installing JDK 17"
+    jdk_name=jdk-17.0.10_7
+    jdk_file=OpenJDK17U-jdk_x64_linux_hotspot_17.0.10_7.tar.gz
 
     mkdir -p /opt/${jdk_name}
     wget -q https://integration-testgrid-resources.s3.amazonaws.com/lib/jdk/$jdk_file.tar.gz
@@ -244,7 +244,7 @@ pwd
 # Testing..............................................
 log_info "install pack into local maven Repository"
 mvn install:install-file -Dfile=/opt/testgrid/workspace/product-apim/modules/distribution/product/target/wso2am-4.3.0-SNAPSHOT.zip -DgroupId=org.wso2.am -DartifactId=wso2am -Dversion=4.3.0-SNAPSHOT -Dpackaging=zip
-install_jdk21
+install_jdk17
 cd $INT_TEST_MODULE_DIR
 rm -rf tests-integration/tests-backend/src/test/resources/testng.xml
 curl -o tests-integration/tests-backend/src/test/resources/testng.xml https://raw.githubusercontent.com/PasanT9/apim-test-integration/4.3.0-jdk/testng.xml
