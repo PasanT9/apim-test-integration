@@ -57,15 +57,18 @@ function log_error(){
 }
 
 function install_jdk(){
-    jdk_name=$1
+    echo "Installing JDK 17"
+    jdk_name=jdk-17.0.10_7
+    jdk_file=OpenJDK17U-jdk_x64_linux_hotspot_17.0.10_7.tar.gz
 
     mkdir -p /opt/${jdk_name}
-    jdk_file=$(jq -r '.jdk[] | select ( .name == '\"${jdk_name}\"') | .file_name' ${INFRA_JSON})
     wget -q https://integration-testgrid-resources.s3.amazonaws.com/lib/jdk/$jdk_file.tar.gz
     tar -xzf "$jdk_file.tar.gz" -C /opt/${jdk_name} --strip-component=1
 
     export JAVA_HOME=/opt/${jdk_name}
-    echo $JAVA_HOME
+    export PATH=$JAVA_HOME/bin:$PATH
+    echo "This is the Java version"
+    java --version
 }
 
 function export_db_params(){
