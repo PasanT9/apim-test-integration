@@ -113,7 +113,7 @@ fi
 git clone https://github.com/wso2/product-apim --branch master --single-branch
 cd product-apim
 #mvn versions:set -DnewVersion=4.3.0
-mvn  -pl '!modules/integration/tests-integration/tests-backend,!modules/integration/tests-integration/tests-benchmark,!modules/integration/tests-integration/tests-restart' clean install -fae -Dmaven.test.skip=true -DskipBenchMarkTest=true -DskipRestartTests=true
+mvn clean install -Dmaven.test.skip=true -U
 
 cd modules/distribution/product/target/
 unzip wso2am-4.3.0-SNAPSHOT.zip
@@ -248,4 +248,4 @@ install_jdk17
 cd $INT_TEST_MODULE_DIR
 rm -rf tests-integration/tests-backend/src/test/resources/testng.xml
 curl -o tests-integration/tests-backend/src/test/resources/testng.xml https://raw.githubusercontent.com/PasanT9/apim-test-integration/4.3.0-jdk/testng.xml
-mvn clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -DskipRestartTests=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
+mvn clean install -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Ptestgrid -DskipBenchMarkTest=true -DskipRestartTests=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -U
